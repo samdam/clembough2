@@ -2,35 +2,45 @@
 this file
 """
 
+import json
 import urllib2
 import AlchemyAPI
 from bs4 import BeautifulSoup
 
-def alchemy():
-    pass
 
 #find quotes and news stories about a company
 def yahoo(company):
-    #ticker = getTicker(company)
-    ticker = 'yhoo'
+    ticker = getTicker(company)
+    if ticker == 'none':
+        print 'No info about that company from yahoo finance.'
+    else:
+        printNews(ticker)
+
+        quotes = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
+                           + ticker + '&f=nscvx').read()
+        printQuotes(ticker)
+
+def printNews(ticker):
     newsXML = urllib2.urlopen('http://finance.yahoo.com/rss/headline?s='
                            + ticker).read()
     newsBS = BeautifulSoup(newsXML).find_all('item')
     news = rarefyBS(newsBS)
-    #printNews(news)
-
-    quotesXML = urllib2.urlopen('http://finance.yahoo.com/rss/quote?s='
-                           + ticker).read()
-    print quotesXML
-    #newsBS = BeautifulSoup(newsXML).find_all('item')
-    #news = rarefyBS(newsBS)
-    #printNews(news)
-
-def printNews(news):
     for story in news:
         for element in story:
             print element
         print '\n'
+
+def printQuotes(ticker):
+    requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
+                ['w','52w Range'],['v','Volume'],['j1','Market Cap'],['r','P/E Ratio'],
+                ['e','EPS'],['d','Dividend'],['y','Yield'],['x','Stock Exchange']]
+    for request in requests:
+        quote = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
+                           + ticker + '&f=' + request[0]).read()
+        quote = quote.rstrip('\n')
+        quote = quote.replace('"', '')
+        datum = request[1] + ': '
+        print datum.ljust(20), quote
 
 #remove tags from a BS.find() list
 def rarefyBS(BSlist):
@@ -63,20 +73,29 @@ def cleanse(s):
                        ["\xE2\x80\xB9", "'"], ["\xE2\x80\xBA", "'"],
                        ["\xe2\x80\x93", "-"], ["\xc2\x80\x99S", ""]]
     for char in unreadableChars:
-        s.replace(char[0], char[1])
-    return s 
+        t = s.replace(char[0], char[1])
+    return t
 
 #obtain ticker from company name
 def getTicker(company):
+    companyURL = company.replace(' ', '%20')
     tickerSrch = urllib2.urlopen(
-        'http://d.yimg.com/autoc.finance.yahoo.com/autoc?' + company +
-        '=yahoo&callback=YAHOO.Finance.SymbolSuggest.ssCallback').read()
-    print tickerSrch
-    return 'yhoo'
+        'http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=' + companyURL
+        + '&callback=YAHOO.Finance.SymbolSuggest.ssCallback').read()
+    #print tickerSrch
+    
+    if 'symbol' in tickerSrch:
+        trunc1 = tickerSrch.split('","name', 1)[0]
+        #print trunc1
+        trunc2 = trunc1.split('symbol":"', 1)[1]
+        #print trunc2
+        return trunc2
+    else:
+        return 'none'
 
 def main():
     yahoo('yahoo')
-    #getTicker('google')
+    #getTicker("yahoo")
 
 
 if __name__ == "__main__":
