@@ -10,15 +10,20 @@ API_KEY = "8416207-a37caedee730d39c3677d808ee478806"
 
 
 def makeDate(uni):
-    """ uni is a unicode string represetning a date and time, this function turns it into a datetime object"""
+    """ uni is a unicode string represetning a date and time, this function
+    turns it into a datetime object"""
     dateandtime = str(uni).split()
     date = dateandtime[0].split("-")
     time = dateandtime[1].split(":")
     for i in range(3):
         date[i] = int(date[i])
         time[i] = int(time[i])
-    when = datetime.datetime(date[0], date[1], date[2], time[0], time[1], time[2])
+    when = datetime.datetime(date[0], date[1], date[2], time[0], time[1],
+                             time[2])
     return when   
+
+def getDate(date):
+    return str(date.year) + "-" + str(date.month) + "-" + str(date.day)
 
 class Retriever:
 
@@ -30,9 +35,13 @@ class Retriever:
         self._events = []
         self.makeUrl()
 
-    def makeUrl(self):
-        if self.AUTH != None:
-            self._url = "http://30boxes.com/api/api.php?method=events.Get&apiKey=" + API_KEY + "&authorizedUserToken=" + self.AUTH
+    def makeUrl(self, todate = None):
+        if todate == None:
+            if self.AUTH != None:
+                self._url = "http://30boxes.com/api/api.php?method=events.Get&apiKey=" + API_KEY + "&authorizedUserToken=" + self.AUTH
+        else:
+            if self.AUTH != None:
+                self._url = "http://30boxes.com/api/api.php?method=events.Get&apiKey=" + API_KEY + "&authorizedUserToken=" + self.AUTH + "&=" + getDate(todate)
 
     def newUser(self):
         self.isNewUser = True
@@ -45,7 +54,7 @@ class Retriever:
         print "Please go to " + url
         self.AUTH = raw_input("What is the key? ")
 
-    def activate(self):
+    def activate(self, todate = None):
         eventSoup = BeautifulSoup(urllib2.urlopen(self._url).read())
         summaries = eventSoup("summary")
         notes = eventSoup("notes")
@@ -53,10 +62,12 @@ class Retriever:
         for i in range(len(summaries)):
             self._events.append((str(summaries[i].string), str(notes[i].string), makeDate(date[i].string)))
 
-    def getEvents(self):
+    def getEvents(self, todate = None):
+        if todate != None:
+            self.makeUrl(todate)
         if self.AUTH == None or self.isNewUser == True:
             self.authorize()
-        self.activate()
+        self.activate(todate)
         return self._events
         
 def main():
