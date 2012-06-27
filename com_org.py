@@ -9,38 +9,39 @@ from bs4 import BeautifulSoup
 
 
 #find quotes and news stories about a company
-def yahoo(company):
+def comORorg(company):
     ticker = getTicker(company)
     if ticker == 'none':
-        print 'No info about that company from yahoo finance.'
+        other(company)
     else:
-        printNews(ticker)
+        yahoo(ticker)
 
+def other(company):
+    print 'other'
+
+def yahoo(ticker):
+    #get stock quotes for the company
         quotes = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
                            + ticker + '&f=nscvx').read()
-        printQuotes(ticker)
+        requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
+                ['w','52w Range'],['v','Volume'],['j1','Market Cap'],['r','P/E Ratio'],
+                ['e','EPS'],['d','Dividend'],['y','Yield'],['x','Stock Exchange']]
+        for request in requests:
+            quote = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
+                           + ticker + '&f=' + request[0]).read()
+            quote = quote.rstrip('\n')
+            quote = quote.replace('"', '')
+            datum = request[1] + ': '
+            print datum.ljust(20), quote
 
-def printNews(ticker):
-    newsXML = urllib2.urlopen('http://finance.yahoo.com/rss/headline?s='
-                           + ticker).read()
+    #get news stories about the company
+    newsXML = urllib2.urlopen('http://finance.yahoo.com/rss/headline?s=' + ticker).read()
     newsBS = BeautifulSoup(newsXML).find_all('item')
     news = rarefyBS(newsBS)
     for story in news:
         for element in story:
             print element
         print '\n'
-
-def printQuotes(ticker):
-    requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
-                ['w','52w Range'],['v','Volume'],['j1','Market Cap'],['r','P/E Ratio'],
-                ['e','EPS'],['d','Dividend'],['y','Yield'],['x','Stock Exchange']]
-    for request in requests:
-        quote = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
-                           + ticker + '&f=' + request[0]).read()
-        quote = quote.rstrip('\n')
-        quote = quote.replace('"', '')
-        datum = request[1] + ': '
-        print datum.ljust(20), quote
 
 #remove tags from a BS.find() list
 def rarefyBS(BSlist):
