@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 this file is a class that gets news on the company given
 takes code from warmup.py in heatr
@@ -5,6 +6,8 @@ takes code from warmup.py in heatr
 
 import urllib2
 from bs4 import BeautifulSoup
+
+tagObj = BeautifulSoup("<b></b>").b
 
 def makeQuery(company):
     searchString = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/News?Query=%27"
@@ -19,8 +22,13 @@ def makeQuery(company):
                 "%27&NewsCategory=%27rt_Business%27&NewsSortBy=%27Relevance%27&$top=15&$format=Atom")
     return searchString
 
-def makeCrainsQuery(comString):
-    searchString = "http://search.chicagobusiness.com/search?q="
+def makeCrainsQuery(comString, city):
+    if city.lower() == "chicago":
+        searchString = "http://search.chicagobusiness.com/search?q="
+    elif city.lower() == "new york":
+        searchString = "http://www.crainsnewyork.com/search?Category=searchresults&q="
+    else:
+        return None
     com = comString.split()
     for i in range(len(com)):
         if i < len(com) - 1:
@@ -50,6 +58,12 @@ def removeUTF(someList):
                 someList[i][j] = someList[i][j].replace(char[0], char[1])
     return someList
 
+def contains(bsObj, attr):
+    for att in bsObj.attrs:
+        if att == attr:
+            return True
+    return False
+
 class NewsInfo:
 
     def __init__(self, company):
@@ -75,8 +89,8 @@ class NewsInfo:
 
         self._soup = BeautifulSoup(urllib2.urlopen(searchString).read())
 
-    def getCrainStories(self):
-        searchString = makeCrainsQuery(self._com)
+    def getCrainStories(self, city):
+        searchString = makeCrainsQuery(self._com, city)
         self._csoup = BeautifulSoup(urllib2.urlopen(searchString).read())
 
     def getSoup(self):
@@ -96,22 +110,74 @@ class NewsInfo:
 
         return self._info
 
-    def searchCSoup(self):
-       tags = ["span", "p"]
-       info = self._csoup("span")
-       for span in info:
-           if not span['class'] == unicode("ez-link-span"):
-               info.remove(span)
-            
+    def searchChiCrains(self):
+        div = self._csoup("div")
+        toRemove = []
+        for d in div:
+            if contains(d, unicode('class')):
+                for attr in d['class']:
+                    if not attr == unicode('ez-main'):
+                        toRemove.append(d)
+            else:
+                toRemove.append(d)
+        for removal in toRemove:
+            if removal in div:
+                div.remove(removal)
+        relevantInfo = []
+        for i in range(len(div)):
+            relevantInfo.append([])
+            for content in div[i].contents:
+                if not type(content) == type(tagObj):
+                    div[i].contents.remove(content)
+            for item in div[i].contents:
+                if contains(item, unicode("href")):
+                    relevantInfo[i].append(str(item['href']))
+                if not item.find("span") == None:
+                    relevantInfo[i].append(str(item.find("span").string))
+                if item['class'] == [unicode('ez-desc')]:
+                    foo = str(item)
+                    foo = foo.replace('<p class="ez-desc">', '')
+                    foo = foo.replace('<b>', '')
+                    foo = foo.replace('</b>', '')
+                    foo = foo.replace('</p>', '')
+                    relevantInfo[i].append(foo.strip())
 
+        return relevantInfo
+
+    def searchNYCrains(self):
+        div = self._csoup("div")
+        toRemove = []
+        for d in div:
+            if contains(d, unicode('class')):
+                for attr in d['class']:
+                    if not attr == unicode('search_item'):
+                        toRemove.append(d)
+            else:
+                toRemove.append(d)
+        for removal in toRemove:
+            if removal in div:
+                div.remove(removal)
+        relevantInfo = []
+        for i in range(len(div)):
+            relevantInfo.append([])
+            for content in div[i].contents:
+                if not type(content) == type(tagObj):
+                    div[i].contents.remove(content)
+            for item in div[i].contents:
+                if item.name == "h3":
+                    item = item.contents[0]
+                if contains(item, unicode("href")):
+                    relevantInfo[i].append(str(item['href']))
+                    relevantInfo[i].append(str(item.string))
+                if item.name == "p":
+                    relevantInfo[i].append(str(item.string))
+
+        return relevantInfo
+    
 def main():
     news = NewsInfo("Ideo")
-    news.getCrainStories()
-    print news.searchCSoup()
-##    news.getStories()
-##    info = news.searchSoup(["d:title", "d:description", "d:url"])
-##    for item in info:
-##        print item
+    news.getCrainStories('new york')
+    print news.searchNYCrains()
 
 if __name__ == "__main__":
     main()
