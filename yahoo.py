@@ -21,20 +21,19 @@ def other(company):
 
 def yahoo(ticker):
     #get stock quotes for the company
-        quotes = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
-                           + ticker + '&f=nscvx').read()
-        requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
+    quotes = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
+                        + ticker + '&f=nscvx').read()
+    requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
                 ['w','52w Range'],['v','Volume'],['j1','Market Cap'],['r','P/E Ratio'],
                 ['e','EPS'],['d','Dividend'],['y','Yield'],['x','Stock Exchange']]
-        for request in requests:
-            quote = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
+    for request in requests:
+        quote = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
                            + ticker + '&f=' + request[0]).read()
-            quote = quote.rstrip('\n')
-            quote = quote.replace('"', '')
-            datum = request[1] + ': '
-            print datum.ljust(20), quote
+        quote = quote.rstrip('\n')
+        quote = quote.replace('"', '')
+        datum = request[1] + ': '
+        print datum.ljust(20), quote
 
-    #get news stories about the company
     newsXML = urllib2.urlopen('http://finance.yahoo.com/rss/headline?s=' + ticker).read()
     newsBS = BeautifulSoup(newsXML).find_all('item')
     news = rarefyBS(newsBS)
@@ -46,19 +45,19 @@ def yahoo(ticker):
 #remove tags from a BS.find() list
 def rarefyBS(BSlist):
     info = []
-    
+
     for item in BSlist:
         elements = []
         for element in item:
             elements.append(getString(element.string))
         info.append(elements)
-                
-    return info 
+
+    return info
 
 def getString(s):
     #PRE: s is a naviagableString
     #POST: returns the string alone of s
-    s = unicode(s).encode('utf-8')    
+    s = unicode(s).encode('utf-8')
     s = str(s)
     s = cleanse(s)
     return s
@@ -84,7 +83,7 @@ def getTicker(company):
         'http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=' + companyURL
         + '&callback=YAHOO.Finance.SymbolSuggest.ssCallback').read()
     #print tickerSrch
-    
+
     if 'symbol' in tickerSrch:
         trunc1 = tickerSrch.split('","name', 1)[0]
         #print trunc1
@@ -94,8 +93,12 @@ def getTicker(company):
     else:
         return 'none'
 
+def askUser():
+    company = raw_input('What company? ')
+    return company
+
 def main():
-    yahoo('yahoo')
+    comORorg(askUser())
     #getTicker("yahoo")
 
 
