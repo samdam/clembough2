@@ -80,7 +80,7 @@ def api_call(access_token_stuff, name):
     # The OAuth Client request works just like httplib2 for the most part.
     resp, content = client.request(url, "GET")
     contentBS = BeautifulSoup(content)
-    print contentBS
+    print contentBS.find_all('person')
     #candidates = contentBS.find_all('person')
     #for person in candidates:
         #print person.find('first-name'), ' ', person.find('last-name')

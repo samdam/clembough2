@@ -2,12 +2,17 @@
 this is the main.py from which the program will run
 """
 
+import retrieve
+import news_info
 import alcParse
-import yahoo_api
+import yahoo
+import linked_in
 
 
 def main():
-    pass
+    getter = retrieve.Retriever()
+    events = getter.getEvents()
+    
 
 
 if __name__ == "__main__":
