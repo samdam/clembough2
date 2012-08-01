@@ -51,7 +51,7 @@ class Retriever:
         there is for sure a better way to do this. TODO """
         url = "http://30boxes.com/api/api.php?method=user.Authorize&apiKey=" + API_KEY + \
             "&applicationName=Clembough&applicationLogoUrl=http%3A%2F%2Fbit.ly%2FLIqYrc"
-        print "Please go to " + url
+        print "Please go to: \n" + url
         self.AUTH = raw_input("What is the key? ")
 
     def activate(self, todate = None):

@@ -6,6 +6,15 @@ import oauth2 as oauth
 import urlparse
 from bs4 import BeautifulSoup
 
+class Bunch:
+    def __init__(self, **kwds):
+        self.__dict__.update(kwds)
+
+    def __str__(self):
+        string = ''
+        for key in self.__dict__:
+            string += (key + ':').ljust(20) + self.__dict__[key] + '\n'
+        return string
 
 def getOAuthToken():
     #initialize the oauth client
@@ -23,22 +32,14 @@ def getOAuthToken():
  
     request_token = dict(urlparse.parse_qsl(content))
 
-    print "Request Token:"
-    print "    - oauth_token        = %s" % request_token['oauth_token']
-    print "    - oauth_token_secret = %s" % request_token['oauth_token_secret']
-
     #redirect to the provider
-    authorize_url =      'https://api.linkedin.com/uas/oauth/authorize'
-    print "Go to the following link in your browser:"
-    print "%s?oauth_token=%s" % (authorize_url, request_token['oauth_token'])
+    print "Go to the following link in your browser, log in with your LinkedIn account and select authorize. If you do not have an account, use this one:"
+    print "%s?oauth_token=%s" % ('https://api.linkedin.com/uas/oauth/authorize', request_token['oauth_token'])
 
     #?
     # After the user has granted access to you, the consumer, the provider will
     # redirect you to whatever URL you have told them to redirect to. You can 
     # usually define this in the oauth_callback argument as well.
-    accepted = 'n'
-    while accepted.lower() == 'n':
-        accepted = raw_input('Have you authorized me? (y/n) ')
     oauth_verifier = raw_input('What is the PIN? ')
 
     #get the access token
@@ -64,7 +65,7 @@ def getOAuthToken():
 def api_call(access_token_stuff, name):
     names = name.split()
     
-    url = 'http://api.linkedin.com/v1/people-search:(people:(id,first-name,last-name,headline,industry,summary,specialties,location:(name)))?first-name=' + names[0] + '&last-name=' + names[1]
+    url = 'http://api.linkedin.com/v1/people-search:(people:(id,first-name,last-name,headline,industry,summary,specialties,location:(name)))?first-name='+ names[0] + '&last-name=' + names[1]
 
     # Create your consumer with the proper key/secret.
     consumer = oauth.Consumer(key="qpquu715bd1y", 
@@ -80,20 +81,37 @@ def api_call(access_token_stuff, name):
     # The OAuth Client request works just like httplib2 for the most part.
     resp, content = client.request(url, "GET")
     contentBS = BeautifulSoup(content)
-    print contentBS.find_all('person')
-    #candidates = contentBS.find_all('person')
-    #for person in candidates:
-        #print person.find('first-name'), ' ', person.find('last-name')
-        #id = person.find('id')
-        #print id
-        #print id.string
-        #print person.find('http://api.linkedin.com/v1/people/id=' + id.string)
+    
+    peopleBS = contentBS.find_all('person')
+    
+    people = []
+    for personBS in peopleBS:
+        person = Bunch(first_name= BS2string(personBS, 'first-name'),
+                       last_name= BS2string(personBS, 'last-name'),
+                       headline= BS2string(personBS, 'headline'),
+                       industry= BS2string(personBS, 'industry'),
+                       summary= BS2string(personBS, 'summary'),
+                       specialties= BS2string(personBS, 'specialties'),
+                       location= BS2string(personBS.find('location'), 'name'))
+        people.append(person)
 
+    if len(people) > 0:
+        return people[0]
+    else:
+        return Bunch()
 
+def BS2string(soup, tag):
+    if soup.find(tag):
+        return soup.find(tag).string
+    return 'None'
 
 def main():
-    name = raw_input('Who?      ')
-    api_call(getOAuthToken(), name)
+    access_token = getOAuthToken()
+    while (True):
+        name = raw_input('Who?      ')
+        if (name == 'done'):
+            break
+        print api_call(access_token, name)
 
 if __name__== "__main__":
     main()

@@ -7,40 +7,64 @@ import urllib2
 import AlchemyAPI
 from bs4 import BeautifulSoup
 
+class Quote:
+    def __init__(self, ticker):
+        self._data = []
+        self._stories = []
+        self.look_up(ticker)
+
+    def __str__(self):
+        string = ''
+        for datum in self._data:
+            string += datum + '\n'
+
+        string += '\n News: \n'
+        for i in range (5):
+            string += self._stories[i].__str__() + '\n'
+        return string
+
+    def look_up(self, ticker):
+        #get stock quotes for the company
+        requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
+                    ['w','52w Range'],['v','Volume'],['j1','Market Cap'],['r','P/E Ratio'],
+                    ['e','EPS'],['d','Dividend'],['y','Yield'],['x','Stock Exchange']]
+        for request in requests:
+            stat = request[1] + ': '
+            datum = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
+                               + ticker + '&f=' + request[0]).read()
+            datum = datum.rstrip('\n')
+            datum = datum.replace('"', '')
+            datum = stat.ljust(20) + datum
+            self._data.append(datum)
+
+        newsXML = urllib2.urlopen('http://finance.yahoo.com/rss/headline?s=' + ticker).read()
+        newsBS = BeautifulSoup(newsXML).find_all('item')
+        news = rarefyBS(newsBS)
+        for item in news:
+            self._stories.append(Story([item[0], item[1], item[2], item[4]]))
+
+class Story:
+    def __init__(self, elements):
+        self._elements = []
+        for element in elements:
+            if element == None:
+                self._elements.append('None')
+            else:
+                self._elements.append(element)
+
+    def __str__(self):
+        string = ''
+        for element in self._elements:
+            string += element + '\n'
+        return string
 
 #find quotes and news stories about a company
 def comORorg(company):
     ticker = getTicker(company)
-    if ticker == 'none':
-        other(company)
+    if ticker == 'none' or not ticker.isalpha():
+        return 'No info available from Yahoo! Finance.'
     else:
-        yahoo(ticker)
-
-def other(company):
-    print 'other'
-
-def yahoo(ticker):
-    #get stock quotes for the company
-    quotes = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
-                        + ticker + '&f=nscvx').read()
-    requests = [['n','Name'],['s','Ticker'],['p','Previous Close'],['c','Change/% Change'],
-                ['w','52w Range'],['v','Volume'],['j1','Market Cap'],['r','P/E Ratio'],
-                ['e','EPS'],['d','Dividend'],['y','Yield'],['x','Stock Exchange']]
-    for request in requests:
-        quote = urllib2.urlopen('http://finance.yahoo.com/d/quotes.csv?s='
-                           + ticker + '&f=' + request[0]).read()
-        quote = quote.rstrip('\n')
-        quote = quote.replace('"', '')
-        datum = request[1] + ': '
-        print datum.ljust(20), quote
-
-    newsXML = urllib2.urlopen('http://finance.yahoo.com/rss/headline?s=' + ticker).read()
-    newsBS = BeautifulSoup(newsXML).find_all('item')
-    news = rarefyBS(newsBS)
-    for story in news:
-        for element in story:
-            print element
-        print '\n'
+        return Quote(ticker)
 
 #remove tags from a BS.find() list
 def rarefyBS(BSlist):
@@ -82,13 +106,10 @@ def getTicker(company):
     tickerSrch = urllib2.urlopen(
         'http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=' + companyURL
         + '&callback=YAHOO.Finance.SymbolSuggest.ssCallback').read()
-    #print tickerSrch
 
     if 'symbol' in tickerSrch:
         trunc1 = tickerSrch.split('","name', 1)[0]
-        #print trunc1
         trunc2 = trunc1.split('symbol":"', 1)[1]
-        #print trunc2
         return trunc2
     else:
         return 'none'
@@ -98,9 +119,7 @@ def askUser():
     return company
 
 def main():
-    comORorg(askUser())
-    #getTicker("yahoo")
-
+    print comORorg(askUser())
 
 if __name__ == "__main__":
     main()

@@ -70,7 +70,7 @@ def getResponse(message):
     
 def main():
     deploy = retrieve.Retriever()
-    response = getResponse("Hello, I'm Clembough! Are you a new user? (y/n) ")
+    response = getResponse("Hello, I'm Clembough2! Are you a new user? (y/n) ")
     if response:
         deploy.authorize()
     response = getResponse(
@@ -108,6 +108,8 @@ def main():
 
     for datum in eventData:
         print datum
+
+    return eventData
     
 
 if __name__ == "__main__":

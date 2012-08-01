@@ -9,10 +9,10 @@ from bs4 import BeautifulSoup
 
 tagObj = BeautifulSoup("<b></b>").b
 
-def makeQuery(company):
+def makeBingQuery(subject):
     searchString = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/News?Query=%27"
-    company = company.replace("&", " ")
-    words = company.split()
+    subject = subject.replace("&", " ")
+    words = subject.split()
     for i in range(len(words)):
         if i < len(words) - 1:
             searchString += (words[i] + "%20")
@@ -66,17 +66,24 @@ def contains(bsObj, attr):
 
 class NewsInfo:
 
-    def __init__(self, company):
+    def __init__(self, person, company):
         """ company is a string, the name of the company we want to learn
         about """
+        self._per = person
         self._com = company
         self._soup = None
         self._csoup = None
         self._info = []
         self._cinfo = []
-        
+
     def getStories(self):
-        searchString = makeQuery(self._com)
+        print "Results for Amy Schwartz:"
+        print self.query(self._per,)
+        print "Results for Ideo:"
+        print self.query(self._com)
+        
+    def query(self, subject):
+        searchString = makeBingQuery(subject)
         #sets up the ability to have username and password on the site
         #this code is from http://docs.python.org/howto/urllib2.html#id6
         password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
@@ -89,9 +96,19 @@ class NewsInfo:
 
         self._soup = BeautifulSoup(urllib2.urlopen(searchString).read())
 
+        return self.searchSoup(['d:url', 'd:title', 'd:description'])
+
     def getCrainStories(self, city):
         searchString = makeCrainsQuery(self._com, city)
-        self._csoup = BeautifulSoup(urllib2.urlopen(searchString).read())
+        if not searchString == None:
+            self._csoup = BeautifulSoup(urllib2.urlopen(searchString).read())
+
+        if city.lower == 'new york':
+            return self.searchNYCrains()
+        elif city.lower == 'chicago':
+            return self.searchChiCrains()
+        else:
+            return None
 
     def getSoup(self):
         return self._soup
@@ -173,11 +190,11 @@ class NewsInfo:
                     relevantInfo[i].append(str(item.string))
 
         return relevantInfo
-    
+
 def main():
-    news = NewsInfo("Ideo")
-    news.getCrainStories('new york')
-    print news.searchNYCrains()
+    news = NewsInfo("Amy Schwartz", "Ideo")
+    news.getStories()
+    #news.getCrainStories('new york')
 
 if __name__ == "__main__":
     main()
