@@ -6,6 +6,7 @@ import alcParse
 import news_info
 import yahoo
 import linked_in
+from string import Template
 
 def srch(event, LI_acc_token):
     print event
@@ -42,10 +43,25 @@ def srch(event, LI_acc_token):
     """
 
 def main():
-    event_data = alcParse.main()
-    LI_acc_token = linked_in.getOAuthToken()
-    for event in event_data:
-        srch(event, LI_acc_token)
+    events = [("google", "http://wwww.google.com"),
+              ("facebook", "http://www.facebook.com"),
+              ("gizmodo", "http://www.gizmodo.com"),
+              ("twitter", "http://www.twitter.com")]
+    f = open("htmlpresentation.txt", "r+")
+    string = f.read()
+    s = Template(string)
+    string = s.safe_substitute(event1=events[0][0], event1href=events[0][1],
+                      event2=events[1][0], event2href=events[1][1],
+                      event3=events[2][0], event3href=events[2][1],
+                      event4=events[3][0], event4href=events[3][1])
+    f.close()
+    f = open("presentation.html", 'w')
+    f.write(string)
+    f.close()
+##    event_data = alcParse.main()
+##    LI_acc_token = linked_in.getOAuthToken()
+##    for event in event_data:
+##        srch(event, LI_acc_token)
 
 if __name__ == "__main__":
     main()
