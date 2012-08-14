@@ -9,8 +9,9 @@ from bs4 import BeautifulSoup
 
 tagObj = BeautifulSoup("<b></b>").b
 
-def makeBingQuery(subject):
-    searchString = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/News?Query=%27"
+def makeBingQuery(subject, params):
+    # Params must be a string either "News" or "Web"
+    searchString = "https://api.datamarket.azure.com/Data.ashx/Bing/Search/" + params + "?Query=%27%22"
     subject = subject.replace("&", " ")
     words = subject.split()
     for i in range(len(words)):
@@ -19,7 +20,7 @@ def makeBingQuery(subject):
         else:
             searchString += (
                 words[i] +
-                "%27&NewsCategory=%27rt_Business%27&NewsSortBy=%27Relevance%27&$top=15&$format=Atom")
+                "%22%27&$top=15&$format=Atom")
     return searchString
 
 def makeCrainsQuery(comString, city):
@@ -77,13 +78,28 @@ class NewsInfo:
         self._cinfo = []
 
     def getStories(self):
-        print "Results for Amy Schwartz:"
-        print self.query(self._per,)
-        print "Results for Ideo:"
-        print self.query(self._com)
+        stories = []
+        for item in self.query(self._com, "News"):
+            stories.append(item)
+        for item in self.query(self._per + " " + self._com, "News"):
+            stories.append(item)
+        for item in self.query(self._per + " " + self._com, "Web"):
+            stories.append(item)
+
+##        toremove = []
+##
+##        for i in range(len(stories)):
+##            for j in range(i, len(stories)):
+##                if stories[i] == stories[j]:
+##                    toremove.append(stories[j])
+##
+##        for item in toremove:
+##            stories.remove(item)
+
+        return stories
         
-    def query(self, subject):
-        searchString = makeBingQuery(subject)
+    def query(self, subject, params):
+        searchString = makeBingQuery(subject, params)
         #sets up the ability to have username and password on the site
         #this code is from http://docs.python.org/howto/urllib2.html#id6
         password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
@@ -102,13 +118,12 @@ class NewsInfo:
         searchString = makeCrainsQuery(self._com, city)
         if not searchString == None:
             self._csoup = BeautifulSoup(urllib2.urlopen(searchString).read())
-
         if city.lower == 'new york':
             return self.searchNYCrains()
         elif city.lower == 'chicago':
             return self.searchChiCrains()
         else:
-            return None
+            return []
 
     def getSoup(self):
         return self._soup
@@ -193,8 +208,11 @@ class NewsInfo:
 
 def main():
     news = NewsInfo("Amy Schwartz", "Ideo")
-    news.getStories()
-    #news.getCrainStories('new york')
+    stories = news.getStories()
+    for story in stories:
+        print story
+    for story in news.getCrainStories('chicago'):
+        print story
 
 if __name__ == "__main__":
     main()
