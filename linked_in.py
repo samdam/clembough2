@@ -12,8 +12,12 @@ class Bunch:
 
     def __str__(self):
         string = ''
-        for key in self.__dict__:
-            string += (key + ':').ljust(20) + self.__dict__[key] + '\n'
+        if self.isEmpty == True:
+            string += "No matches found on LinkedIn."
+        else:
+            for key in self.__dict__:
+                if not key == 'isEmpty':
+                    string += (key + ':').ljust(20) + self.__dict__[key] + '\n'
         return string
 
 def getOAuthToken():
@@ -92,13 +96,17 @@ def api_call(access_token_stuff, name):
                        industry= BS2string(personBS, 'industry'),
                        summary= BS2string(personBS, 'summary'),
                        specialties= BS2string(personBS, 'specialties'),
-                       location= BS2string(personBS.find('location'), 'name'))
+                       location= BS2string(personBS.find('location'), 'name'),
+                       isEmpty= False)
         people.append(person)
 
     if len(people) > 0:
-        return people[0]
+        return people
     else:
-        return Bunch()
+        return Bunch(isEmpty= True)
+
+def disambiguate(people):
+    pass
 
 def BS2string(soup, tag):
     if soup.find(tag):
@@ -111,7 +119,9 @@ def main():
         name = raw_input('Who?      ')
         if (name == 'done'):
             break
-        print api_call(access_token, name)
+        peeps = api_call(access_token, name)
+        for person in peeps:
+            print person
 
 if __name__== "__main__":
     main()
