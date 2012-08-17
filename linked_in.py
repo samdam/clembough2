@@ -16,8 +16,11 @@ class Bunch:
             string += "No matches found on LinkedIn."
         else:
             for key in self.__dict__:
-                if not key == 'isEmpty':
-                    string += (key + ':').ljust(20) + self.__dict__[key] + '\n'
+                if not (key == 'isEmpty' or key == 'positions'):
+                    field = 'unavailable'
+                    if not self.__dict__[key] == None:
+                        field = self.__dict__[key] 
+                    string += (key + ':').ljust(20) + field + '\n'
         return string
 
 def getOAuthToken():
@@ -39,6 +42,7 @@ def getOAuthToken():
     #redirect to the provider
     print "Go to the following link in your browser, log in with your LinkedIn account and select authorize. If you do not have an account, use this one:"
     print "%s?oauth_token=%s" % ('https://api.linkedin.com/uas/oauth/authorize', request_token['oauth_token'])
+
     #?
     # After the user has granted access to you, the consumer, the provider will
     # redirect you to whatever URL you have told them to redirect to. You can 
@@ -65,10 +69,10 @@ def getOAuthToken():
     return access_token_stuff
 
 
-def api_call(access_token_stuff, name):
+def api_call(access_token_stuff, name, company):
     names = name.split()
-    
-    url = 'http://api.linkedin.com/v1/people-search:(people:(id,first-name,last-name,headline,industry,summary,specialties,location:(name)))?first-name='+ names[0] + '&last-name=' + names[1]
+  
+    url = 'http://api.linkedin.com/v1/people-search:(people:(id,first-name,last-name,headline,industry,summary,specialties,location:(name),positions))?first-name=' + names[0] + '&last-name=' + names[1]
 
     # Create your consumer with the proper key/secret.
     consumer = oauth.Consumer(key="qpquu715bd1y", 
@@ -83,12 +87,16 @@ def api_call(access_token_stuff, name):
 
     # The OAuth Client request works just like httplib2 for the most part.
     resp, content = client.request(url, "GET")
+    print content
     contentBS = BeautifulSoup(content)
     
     peopleBS = contentBS.find_all('person')
     
     people = []
     for personBS in peopleBS:
+        LIcompany = None
+        if not personBS.find('positions') == None:
+            LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
         person = Bunch(first_name= BS2string(personBS, 'first-name'),
                        last_name= BS2string(personBS, 'last-name'),
                        headline= BS2string(personBS, 'headline'),
@@ -96,20 +104,19 @@ def api_call(access_token_stuff, name):
                        summary= BS2string(personBS, 'summary'),
                        specialties= BS2string(personBS, 'specialties'),
                        location= BS2string(personBS.find('location'), 'name'),
+                       company= LIcompany,
                        isEmpty= False)
-        people.append(person)
-
+        if (not person.company == None) and (person.company.lower() == company.lower()):
+            people.append(person)
     if len(people) > 0:
-        return people
+        return people[0].__dict__
     else:
         return Bunch(isEmpty= True)
 
-def disambiguate(people):
-    pass
-
 def BS2string(soup, tag):
-    if soup.find(tag):
-        return soup.find(tag).string
+    if not soup == None:
+        if soup.find(tag):
+            return soup.find(tag).string
     return 'None'
 
 def main():
@@ -118,9 +125,13 @@ def main():
         name = raw_input('Who?      ')
         if (name == 'done'):
             break
-        peeps = api_call(access_token, name)
-        for person in peeps:
+        company = raw_input('Company?   ')
+        person = api_call(access_token, name, company)
+        if person == None:
+            print 'Nobody found'
+        else:
             print person
+    
 
 if __name__== "__main__":
     main()
