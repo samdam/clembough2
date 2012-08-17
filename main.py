@@ -18,7 +18,7 @@ def srch(event, LI_acc_token):
 
     ##crain_stories = news.getCrainStories(subject.location.string.split()[0])
 
-    return [subject, yahoo_quote, news, bing_stories, crain_stories]
+    return [subject, yahoo_quote, news, bing_stories]
 
 def getEvents():
     event_data = alcParse.main()
