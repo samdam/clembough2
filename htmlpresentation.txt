@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="container" style="width:750px">
+
+<div id="header" style="background-color:#E61E3F;">
+<h1 style="margin-bottom:0;">Calendar Info from Clembough2</h1></div>
+
+<div id="menu" style="background-color:#D46A7B;height:200px;width:750px;float:left;">
+<b>Which event would you like to learn about?</b><br />
+<a href="${event1href}" > $event1 </a><br />
+<a href="${event2href}" > $event2 </a><br />
+<a href="${event3href}" > $event3 </a><br />
+<a href="${event4href}" > $event4 </a><br />
+<a href="${event5href}" > $event5 </a><br /></div>
+</div>
+
+</body>
+</html>
