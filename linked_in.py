@@ -38,9 +38,7 @@ def getOAuthToken():
 
     #redirect to the provider
     print "Go to the following link in your browser, log in with your LinkedIn account and select authorize. If you do not have an account, use this one:"
-    return ["%s?oauth_token=%s" % ('https://api.linkedin.com/uas/oauth/authorize', request_token['oauth_token']), consumer, client, resp, content, request_token]
-
-def oauthpart2(consumer, client, resp, content, request_token):
+    print "%s?oauth_token=%s" % ('https://api.linkedin.com/uas/oauth/authorize', request_token['oauth_token'])
     #?
     # After the user has granted access to you, the consumer, the provider will
     # redirect you to whatever URL you have told them to redirect to. You can 
