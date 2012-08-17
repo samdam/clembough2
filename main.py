@@ -23,7 +23,11 @@ def srch(event, LI_acc_token):
 def getEvents():
     event_data = alcParse.main()
     events = []
-    LI_acc_token = linked_in.getOAuthToken()
+    stuff = linked_in.getOAuthToken()
+    return stuff
+
+def getEventsPart2(stuff)
+    LI_acc_token = oauthpart2(stuff[1], stuff[2], stuff[3], stuff[4], stuff[5]
     for event in event_data:
         events.append([event, srch(event, LI_acc_token)])
     return events
