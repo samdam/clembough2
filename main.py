@@ -16,7 +16,7 @@ def srch(event, LI_acc_token):
     
     bing_stories = news.getStories()
 
-    crain_stories = news.getCrainStories(subject.location.string.split()[0])
+    ##crain_stories = news.getCrainStories(subject.location.string.split()[0])
 
     return [subject, yahoo_quote, news, bing_stories, crain_stories]
 
