@@ -21,11 +21,11 @@ def srch(event, LI_acc_token):
     return [subject, yahoo_quote, news, bing_stories, crain_stories]
 
 def getEvents():
-    events = []
     stuff = linked_in.getOAuthToken()
     return stuff
 
 def getEventsPart2(stuff):
+    events = []
     event_data = alcParse.main()
     LI_acc_token = oauthpart2(stuff[1], stuff[2], stuff[3], stuff[4], stuff[5]
     for event in event_data:
