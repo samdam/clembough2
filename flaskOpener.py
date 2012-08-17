@@ -10,9 +10,13 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     events = main.getEvents()
-    return str(events)
-##    menuWriter(eventsDict)
-##    return render_template('presentation.html')
+    eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
+                      event2=events[1][0][0], event2href="/"+events[1][0][0],
+                      event3=events[2][0][0], event3href="/"+events[2][0][0],
+                      event4=events[3][0][0], event4href="/"+events[3][0][0],
+                      event5=events[4][0][0], event5href="/"+events[4][0][0])
+    menuWriter(eventsDict)
+    return render_template('presentation.html')
 ##
 ##@app.route('/<path:url>/')
 ##def get_url(url):
