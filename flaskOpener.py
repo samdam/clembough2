@@ -10,39 +10,22 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     events = main.getEvents()
-    eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
-                      event2=events[1][0][0], event2href="/"+events[1][0][0],
-                      event3=events[2][0][0], event3href="/"+events[2][0][0],
-                      event4=events[3][0][0], event4href="/"+events[3][0][0],
-                      event5=events[4][0][0], event5href="/"+events[4][0][0])
-    menuWriter(eventsDict)
-    return render_template('presentation.html')
-##
-##@app.route('/<path:url>/')
-##def get_url(url):
-##    if not url.startswith('http://'):
-##        url = 'http://' + url
-##    urls = turn_on_heat(url)
-##    create_template(urls)
-##    return render_template('printer.html')
-##
-##def create_template(urls):
-##    htmlDoc = '<!DOCTYPE html> <html> <body> <h1>Try some of these!</h1> <p>'
-##    for url in urls:
-##        htmlDoc = htmlDoc + ' <a href="' + url[0] + '" target="_blank">' + url[1] + \
-##                  '<a> <br /> <p> ' + url[2] + '</p>'
-##    htmlDoc += '</p> </body> </html>'
-##    filename = "templates/printer.html"
-##    f = open(filename, 'w')
-##    f.write(htmlDoc)
-##    f.close()
-##    return
-##
-##def turn_on_heat(url):
-##    heater = WarmUp(url)
-##    answer = heater.process()
-##    return answer
+##    eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
+##                      event2=events[1][0][0], event2href="/"+events[1][0][0],
+##                      event3=events[2][0][0], event3href="/"+events[2][0][0],
+##                      event4=events[3][0][0], event4href="/"+events[3][0][0],
+##                      event5=events[4][0][0], event5href="/"+events[4][0][0])
+##    menuWriter(eventsDict)
+##    return render_template('presentation.html')
+    return str(events)
 
+@app.route('/<path:name>/')
+def summon_person(name):
+    for event in events:
+        if event[0][0] == name:
+            return "butts"
+    return "butts"
+    
 def menuWriter(eventsDict):
     ## eventDict is a dict of event names (person and place) and their links
     f = open("templates/htmlpresentation.txt", "r+")
