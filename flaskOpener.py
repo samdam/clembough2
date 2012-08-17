@@ -9,10 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    stuff = main.getEvents()
-    redirect(stuff[0])
-    events = main.getEventsPart2(stuff)
-    
+    events = main.getEvents()
     return events
 ##    menuWriter(eventsDict)
 ##    return render_template('presentation.html')
