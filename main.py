@@ -18,7 +18,7 @@ def srch(event, LI_acc_token):
 
     ##crain_stories = news.getCrainStories(subject.location.string.split()[0])
 
-    return [subject, yahoo_quote, news, bing_stories]
+    return [subject, yahoo_quote, news, bing_stories, crain_stories]
 
 def getEvents():
     event_data = alcParse.main()
@@ -26,7 +26,7 @@ def getEvents():
     stuff = linked_in.getOAuthToken()
     return stuff
 
-def getEventsPart2(stuff)
+def getEventsPart2(stuff):
     LI_acc_token = oauthpart2(stuff[1], stuff[2], stuff[3], stuff[4], stuff[5]
     for event in event_data:
         events.append([event, srch(event, LI_acc_token)])
