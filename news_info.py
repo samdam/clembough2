@@ -79,12 +79,21 @@ class NewsInfo:
 
     def getStories(self):
         stories = []
+        count = 0
         for item in self.query(self._com, "News"):
-            stories.append(item)
+            if count < 5:
+                stories.append(item)
+                count += 1
+        count = 0
         for item in self.query(self._per + " " + self._com, "News"):
-            stories.append(item)
+            if count < 5:
+                stories.append(item)
+                count += 1
+        count = 0
         for item in self.query(self._per + " " + self._com, "Web"):
-            stories.append(item)
+            if count < 5:
+                stories.append(item)
+                count += 1
 
 ##        toremove = []
 ##
