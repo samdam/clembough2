@@ -95,7 +95,8 @@ def api_call(access_token_stuff, name, company):
     people = []
     for personBS in peopleBS:
         LIcompany = None
-        if not personBS.find('positions') == None:
+        #if not personBS.find('positions') == None:
+        if len(personBS.find('positions') > 0:
             LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
         person = Bunch(first_name= BS2string(personBS, 'first-name'),
                        last_name= BS2string(personBS, 'last-name'),
