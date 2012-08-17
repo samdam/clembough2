@@ -5,6 +5,8 @@ from flask import Flask, render_template
 import main
 from string import Template
 
+events = None
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -22,9 +24,17 @@ def index():
 @app.route('/<path:name>/')
 def summon_person(name):
     for event in events:
-        if event[0][0] == name:
-            return "butts"
-    return "butts"
+        if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
+            eventDict = dict(event_title=event[0][0]+" at "+event[0][1],
+                             person=event[0][0], company=event[0][1],
+                             job_title=event[1][0]['headline'], 
+                             industry=event[1][0]['industry'],
+                             summary=event[1][0]['summary'],
+                             specialties=event[1][0]['specialties'],
+                             location=event[1][0]['location'])
+            eventNoStockWriter(eventDict)
+            
+    return render_template('event.html')
     
 def menuWriter(eventsDict):
     ## eventDict is a dict of event names (person and place) and their links
