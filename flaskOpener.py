@@ -127,4 +127,4 @@ def eventNoStockWriter(eventDict):
     return
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000) #run on 23.23.237.182:5000
+    app.run(host='0.0.0.0', port=5000, debug=True) #run on 23.23.237.182:5000
