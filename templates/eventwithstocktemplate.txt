@@ -106,7 +106,7 @@
 </tr>
 <tr>
 <td>Yield</td>
-<td>${yield}</td>
+<td>${y}</td>
 </tr>
 <tr>
 <td>Stock Exchange</td>
