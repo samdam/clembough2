@@ -1,17 +1,16 @@
 """
 Utilizes flask to open html files that display the calendar info
 """
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 import main
 from string import Template
-
-events = None
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     events = main.getEvents()
+    ap..jinja_env.globals['events'] = events
     eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
                       event2=events[1][0][0], event2href="/"+events[1][0][0],
                       event3=events[2][0][0], event3href="/"+events[2][0][0],
