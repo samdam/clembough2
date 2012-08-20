@@ -17,7 +17,8 @@ def index():
                       event4=events[3][0][0], event4href="/"+events[3][0][0],
                       event5=events[4][0][0], event5href="/"+events[4][0][0])
     menuWriter(eventsDict)
-    return render_template('presentation.html')
+    #return render_template('presentation.html')
+    return str(events)
 
 @app.route('/<path:name>/')
 def summon_person(name):
