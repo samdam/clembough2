@@ -75,7 +75,9 @@ def comORorg(company):
     else:
         return Quote(ticker)
 
-# rarefyBS: convert a Beautiful Soup object to a list of strings.
+# rarefyBS: convert a Beautiful Soup .find list to a list of strings.
+# takes a list of BS objects.
+# returns a 2D list of strings.
 def rarefyBS(BSlist):
     info = []
 
@@ -87,17 +89,15 @@ def rarefyBS(BSlist):
 
     return info
 
+# getString: convert a navigableString to a string
 def getString(s):
-    #PRE: s is a naviagableString
-    #POST: returns the string alone of s
     s = unicode(s).encode('utf-8')
     s = str(s)
     s = cleanse(s)
     return s
 
+# cleanse: convert a unicode string encoded to utf-8 to a string without unicode characters.
 def cleanse(s):
-    #PRE: s is a unicode string encoded to utf-8
-    #POST: returns the string without and unicode characters.
     unreadableChars = [["\xC2\xAB", '"'], ["\xC2\xBB", '"'],
                        ["\xE2\x80\x98", "'"], ["\xE2\x80\x99", "'"],
                        ["\xE2\x80\x9A", "'"], ["\xE2\x80\x9B", "'"],
@@ -109,7 +109,9 @@ def cleanse(s):
         t = s.replace(char[0], char[1])
     return t
 
-#obtain ticker from company name
+# getTicker: search for the ticker for a company on Yahoo! Finance.
+# takes company name.
+# returns a ticker, or 'none' if no ticker is found.
 def getTicker(company):
     companyURL = company.replace(' ', '%20')
     tickerSrch = urllib2.urlopen(
@@ -123,12 +125,8 @@ def getTicker(company):
     else:
         return 'none'
 
-def askUser():
-    company = raw_input('What company? ')
-    return company
-
 def main():
-    print comORorg(askUser())
+    pass
 
 if __name__ == "__main__":
     main()
