@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     events = main.getEvents()
-    ap..jinja_env.globals['events'] = events
+    app.jinja_env.globals['events'] = events
     eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
                       event2=events[1][0][0], event2href="/"+events[1][0][0],
                       event3=events[2][0][0], event3href="/"+events[2][0][0],
