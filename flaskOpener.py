@@ -22,15 +22,16 @@ def index():
 
 @app.route('/<path:name>/')
 def summon_person(name):
+    trans_table = ''.join( [chr(i) for i in range(128)] + [' '] * 128 )
     for event in app.jinja_env.globals['events']:
         if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
-            eventDict = dict(event_title=event[0][0]+" at "+event[0][1],
-                             person=event[0][0], company=event[0][1],
-                             job_title=event[1][0]['headline'], 
-                             industry=event[1][0]['industry'],
-                             summary=event[1][0]['summary'],
-                             specialties=event[1][0]['specialties'],
-                             location=event[1][0]['location'],
+            eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
+                             person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
+                             job_title=event[1][0]['headline'].translate(trans_table), 
+                             industry=event[1][0]['industry'].translate(trans_table),
+                             summary=event[1][0]['summary'].translate(trans_table),
+                             specialties=event[1][0]['specialties'].translate(trans_table),
+                             location=event[1][0]['location'].translate(trans_table),
                              clink1=event[1][3][0][0], ctitle1=event[1][3][0][1], cdesc1=event[1][3][0][2],
                              clink2=event[1][3][1][0], ctitle2=event[1][3][1][1], cdesc2=event[1][3][1][2],
                              clink3=event[1][3][2][0], ctitle3=event[1][3][2][1], cdesc3=event[1][3][2][2],
@@ -43,13 +44,13 @@ def summon_person(name):
                              plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2])
             eventNoStockWriter(eventDict)
         elif event[0][0] == name:
-            eventDict = dict(event_title=event[0][0]+" at "+event[0][1],
-                             person=event[0][0], company=event[0][1],
-                             job_title=event[1][0]['headline'], 
-                             industry=event[1][0]['industry'],
-                             summary=event[1][0]['summary'],
-                             specialties=event[1][0]['specialties'],
-                             location=event[1][0]['location'],
+            eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
+                             person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
+                             job_title=event[1][0]['headline'].translate(trans_table), 
+                             industry=event[1][0]['industry'].translate(trans_table),
+                             summary=event[1][0]['summary'].translate(trans_table),
+                             specialties=event[1][0]['specialties'].translate(trans_table),
+                             location=event[1][0]['location'].translate(trans_table),
                              clink1=event[1][3][0][0], ctitle1=event[1][3][0][1], cdesc1=event[1][3][0][2],
                              clink2=event[1][3][1][0], ctitle2=event[1][3][1][1], cdesc2=event[1][3][1][2],
                              clink3=event[1][3][2][0], ctitle3=event[1][3][2][1], cdesc3=event[1][3][2][2],
