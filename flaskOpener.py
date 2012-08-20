@@ -21,7 +21,7 @@ def index():
 
 @app.route('/<path:name>/')
 def summon_person(name):
-    for event in events:
+    for event in app.jinja_env.globals['events']:
         if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
             eventDict = dict(event_title=event[0][0]+" at "+event[0][1],
                              person=event[0][0], company=event[0][1],
