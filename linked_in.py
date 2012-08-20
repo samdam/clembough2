@@ -88,7 +88,8 @@ def search_LI(access_token_stuff, name, company):
     for personBS in peopleBS:
         LIcompany = None
         if not personBS.find('positions') == None:
-            LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
+            if not personBS.find('positions').find('position') == None:
+                LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
 
         # if a match is found, return it
         if (not LIcompany == None) and (LIcompany.lower() == company.lower()):
