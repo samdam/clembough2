@@ -17,6 +17,11 @@ def makeAlcObj():
     return alcObj
 
 def searchSoup(entities, bsObj, eventString, alc):
+    #PRE: entities is a list of named entities, eventString is the string
+    # of the event. bsObj is the beautiful soup object containing the event
+    # alc is the alchemy api object
+    #POST: returns an appended entities list, the altered event string and 
+    # whatever remains fo the bsObj
     name = None
     for kind in bsObj("type"):
         if str(kind.string) == "Person":
@@ -31,14 +36,16 @@ def searchSoup(entities, bsObj, eventString, alc):
 
 def getCompanies(s):
     """finds the company name in the string"""
-    s = s.strip('1234567890-: ,.')
-    for word in stopwords:
+    s = s.strip('1234567890-: ,.') #strip extraneous chars
+    for word in stopwords: #remove stopwords
         if " " + word + " " in s or s.startswith(word + ' ') or s.endswith(
             " " + word):
             s = s.replace(word, "")
-    s = s.strip('1234567890-: ,.')
+    s = s.strip('1234567890-: ,.') #strip extraneous chars again
     return s
 
+
+# list of stopwords used in getCompanies
 stopwords = ['a','able','about','across','after','all','almost','also','am',
              'among','an','and','any','are','as','at','be','because','been',
              'but','by','can','cannot','could','dear','did','do','does',
@@ -55,61 +62,58 @@ stopwords = ['a','able','about','across','after','all','almost','also','am',
              '--', '-', 'many', 'here', 'meeting', 'lunch', 'none', 'Meeting',
              "None", "Lunch", "blah", "notes"]
 
+#affirmative and negative responses for getResponse
 yes = ["Yes", "yes", "y", "Y"]
 no = ["No", "no", "n", "N"]
 
-def getResponse(message):
-    response = raw_input(message).strip()
-    if response in yes:
+def getResponse(message):#prompts the user to type in a response to "message"
+    response = raw_input(message).strip() #gets the response
+    if response in yes:#evaluates if in yes
         return True
-    elif response in no:
+    elif response in no:#evaluates if in no
         return False
     else:
         print "Please answer yes or no"
         return getResponse(message)
     
 def main():
-    deploy = retrieve.Retriever()
-    response = getResponse("Hello, I'm Clembough2! Are you a new user? (y/n) ")
-    if response:
-        deploy.authorize()
-    response = getResponse(
-        "Would you like me to look at your whole calendar? (y/n) ")
-    if not response:
-        events = deploy.getEvents(datetime.date.today())
-    else:
-        events = deploy.getEvents()
+    deploy = retrieve.Retriever()#retrieves 
+    #TODO: use a better form to retrieve answers about new users
+    #response = getResponse("Hello, I'm Clembough2! Are you a new user? (y/n) ")
+    #if response:
+    deploy.authorize()
+    #TODO: as above, find a better way to look
+    #response = getResponse(
+    #    "Would you like me to look at your whole calendar? (y/n) ")
+    #if not response:
+    #    events = deploy.getEvents(datetime.date.today())
+    #else:
+    events = deploy.getEvents()# gets the events
     
-    alc = makeAlcObj()
+    alc = makeAlcObj() #make an alchemy object
 
     eventStrings = []
     
-    for i in range(len(events)):
+    for i in range(len(events)): #decodes the events into event strings from events
         eventStrings.append("")
         for detail in events[i]:
             eventStrings[i] += str(detail) + " "
 
     bsList = []
     eventData = []
-    for i in range(len(eventStrings)):
-        bsList.append(BeautifulSoup(
+    for i in range(len(eventStrings)): #makes bs objects of each eventString
+        bsList.append(BeautifulSoup(   #with which to seach the events
             alc.TextGetRankedNamedEntities(eventStrings[i])))
         name, eventStrings[i], bsList[i] = searchSoup(eventData, bsList[i],
                                                            eventStrings[i], alc)
-        
-##    for event in eventData:
-##        print event
-##    print "\n"
-##    for event in eventStrings:
-##        print event
 
-    for i in range(len(eventStrings)):
+    for i in range(len(eventStrings)): #makes the data a name and company
         eventData[i] = (eventData[i], getCompanies(eventStrings[i]))
 
-    for datum in eventData:
+    for datum in eventData: #prints the data
         print datum
 
-    return eventData
+    return eventData #returns it
     
 
 if __name__ == "__main__":
