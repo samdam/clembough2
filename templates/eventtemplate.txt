@@ -7,7 +7,7 @@
 <div id="header" style="background-color:#3939E6;">
 <h1 style="margin-bottom:0;">Info about ${event_title}</h1></div>
 
-<div id="linked_in" style="background-color:#F28A22;height:500px;width:300px;float:left;">
+<div id="linked_in" style="background-color:#F28A22;height:900px;width:300px;float:left;">
 <b>About ${person} at ${company}</b><br />
 
 <table>
@@ -37,7 +37,7 @@
   </tr>
 </table>
 
-<div id="person_info" style="background-color:#F28A22;height:500px;width:300px;float:left;">
+<div id="person_info" style="background-color:#F28A22;height:900px;width:300px;float:left;">
 <b>Info and News about ${person}</b><br />
 <a href="${plink1}">${ptitle1}</a><br />
 <p>${pdesc1}</p><br />
@@ -51,7 +51,7 @@
 <p>${pdesc5}</p>
 </div>
 
-<div id="company_news" style="background-color:#F28A22;height:500px;width:300px;float:left;">
+<div id="company_news" style="background-color:#F28A22;height:900px;width:300px;float:left;">
 <b>Info and News about ${company}</b><br />
 <a href="${clink1}">${ctitle1}</a><br />
 <p>${cdesc1}</p><br />
