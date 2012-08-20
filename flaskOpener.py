@@ -8,23 +8,25 @@ from string import Template
 app = Flask(__name__)
 
 @app.route('/')
-def index():
-    events = main.getEvents()
-    app.jinja_env.globals['events'] = events
+def index(): #first step, shows the first 5 meetings etc on calendar
+    events = main.getEvents() #gets the events
+    app.jinja_env.globals['events'] = events #sets is as a global variable for second step
     eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
                       event2=events[1][0][0], event2href="/"+events[1][0][0],
                       event3=events[2][0][0], event3href="/"+events[2][0][0],
                       event4=events[3][0][0], event4href="/"+events[3][0][0],
                       event5=events[4][0][0], event5href="/"+events[4][0][0])
-    menuWriter(eventsDict)
-    return render_template('presentation.html')
-    #return str(events)
+                      # ^ creates dict for replacing variables in the html menu
+    menuWriter(eventsDict) #make menu
+    return render_template('presentation.html') #render menu
 
 @app.route('/<path:name>/')
-def summon_person(name):
-    trans_table = ''.join( [chr(i) for i in range(128)] + [' '] * 128 )
+def summon_person(name): #makes the data sheet about an event
+    trans_table = ''.join( [chr(i) for i in range(128)] + [' '] * 128 ) #used to remove unrecognized unicode chars
     for event in app.jinja_env.globals['events']:
+        #first checks that its the correct event and if it has stock data
         if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
+            #if not, makes a dictionary from the event data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
                              job_title=str(event[1][0]['headline']).translate(trans_table), 
@@ -42,8 +44,9 @@ def summon_person(name):
                              plink3=event[1][3][7][0], ptitle3=event[1][3][7][1], pdesc3=event[1][3][7][2],
                              plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
                              plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2])
-            eventNoStockWriter(eventDict)
-        elif event[0][0] == name:
+            eventNoStockWriter(eventDict) #writes the html
+        elif event[0][0] == name: #if it does have stock data
+            #writes the dict for the html page with stock data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
                              job_title=str(event[1][0]['headline']).translate(trans_table), 
@@ -72,12 +75,13 @@ def summon_person(name):
                              dividend=event[1][1][9].split(':')[1],
                              y=event[1][1][10].split(':')[1],
                              stock_x=event[1][1][11].split(':')[1])
-            eventWithStockWriter(eventDict)
+            eventWithStockWriter(eventDict) #write html page
             
-    return render_template('event.html')
+    return render_template('event.html') #render the html page
     
 def menuWriter(eventsDict):
     ## eventDict is a dict of event names (person and place) and their links
+    ## writes the html menu page based on a the template htmlprsentation.txt
     f = open("templates/htmlpresentation.txt", "r+")
     string = f.read()
     s = Template(string)
@@ -94,6 +98,7 @@ def eventWithStockWriter(eventDict):
     ## company, imgsrc, name, job_title, industry, summary, specialties,
     ## location, 5 personal links (including link, title and desc) and 5
     ## company links (including link, title, and desc) and all stock info
+    ## writes the html data sheet for events with stock data
     f = open("templates/eventwithstocktemplate.txt", "r+")
     string = f.read()
     s = Template(string)
@@ -110,6 +115,7 @@ def eventNoStockWriter(eventDict):
     ## company, imgsrc, name, job_title, industry, summary, specialties,
     ## location, 5 personal links (including link, title and desc) and 5
     ## company links (including link, title, and desc)
+    ## writes the html data sheet for events without stock data. 
     f = open("templates/eventtemplate.txt", "r+")
     string = f.read()
     s = Template(string)
@@ -120,6 +126,5 @@ def eventNoStockWriter(eventDict):
     f.close()
     return
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000) #run on 23.23.237.182:5000
