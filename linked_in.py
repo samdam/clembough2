@@ -87,22 +87,24 @@ def search_LI(access_token_stuff, name, company):
     people = []
     for personBS in peopleBS:
         LIcompany = None
-        if not personBS.find('positions') == None:
-            if not personBS.find('positions').find('position') == None:
-                LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
-
-        # if a match is found, return it
-        if (not LIcompany == None) and (LIcompany.lower() == company.lower()):
-            return Bunch(first_name= BS2string(personBS, 'first-name'),
-                           last_name= BS2string(personBS, 'last-name'),
-                           headline= BS2string(personBS, 'headline'),
-                           industry= BS2string(personBS, 'industry'),
-                           summary= BS2string(personBS, 'summary'),
-                           specialties= BS2string(personBS, 'specialties'),
-                           location= BS2string(personBS.find('location'), 'name'),
-                           company= LIcompany,
-                           isEmpty= False)
-    return Bunch(isEmpty= True)
+        #if not personBS.find('positions') == None:
+        if len(personBS.find('positions')) > 0:
+            LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
+        person = Bunch(first_name= BS2string(personBS, 'first-name'),
+                       last_name= BS2string(personBS, 'last-name'),
+                       headline= BS2string(personBS, 'headline'),
+                       industry= BS2string(personBS, 'industry'),
+                       summary= BS2string(personBS, 'summary'),
+                       specialties= BS2string(personBS, 'specialties'),
+                       location= BS2string(personBS.find('location'), 'name'),
+                       company= LIcompany,
+                       isEmpty= False)
+        if (not person.company == None) and (person.company.lower() == company.lower()):
+            people.append(person)
+    if len(people) > 0:
+        return people[0].__dict__
+    else:
+        return Bunch(isEmpty= True)
 
 # BS2string: searches Beautiful Soup object for a tag and returns it as a string.
 # takes a BS object and the tag to search for.

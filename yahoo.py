@@ -65,7 +65,9 @@ class Story:
             string += element + '\n'
         return string
 
-# comORorg: 
+# comORorg: if getTicker doesn't find a match, tell user, otherwise get quotes and stories
+# takes company name.
+# returns Quote class object for the company.
 def comORorg(company):
     ticker = getTicker(company)
     if ticker == 'none' or not ticker.isalpha():
@@ -73,7 +75,7 @@ def comORorg(company):
     else:
         return Quote(ticker)
 
-#remove tags from a BS.find() list
+# rarefyBS: convert a Beautiful Soup object to a list of strings.
 def rarefyBS(BSlist):
     info = []
 
