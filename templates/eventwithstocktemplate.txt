@@ -51,7 +51,7 @@
 <p>${pdesc5}</p>
 </div>
 
-<div id="company_news" style="background-color:#F28A22;height:900px;width:300px;float:left;">
+<div id="company_news" style="background-color:#F28A22;height:900px;width:300px;float:right;">
 <b>Info and News about ${company}</b><br />
 <a href="${clink1}">${ctitle1}</a><br />
 <p>${cdesc1}</p><br />
