@@ -62,7 +62,17 @@ def summon_person(name):
                              plink3=event[1][3][7][0], ptitle3=event[1][3][7][1], pdesc3=event[1][3][7][2],
                              plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
                              plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2],
-                             )
+                             ticker=event[1][1][1].split(':')[1],
+                             previous_close=event[1][1][2].split(':')[1],
+                             change=event[1][1][3].split(':')[1],
+                             fifty_two_w_range=event[1][1][4].split(':')[1],
+                             volume=event[1][1][5].split(':')[1],
+                             market_cap=event[1][1][6].split(':')[1],
+                             p_over_e=event[1][1][7].split(':')[1],
+                             eps=event[1][1][8].split(':')[1],
+                             dividend=event[1][1][9].split(':')[1],
+                             y=event[1][1][10].split(':')[1],
+                             stock_x=event[1][1][11].split(':')[1])
             eventWithStockWriter(eventDict)
             
     return render_template('event.html')
