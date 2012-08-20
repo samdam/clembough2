@@ -8,7 +8,7 @@ import yahoo
 import linked_in
 
 def srch(event, LI_acc_token):
-    subject = linked_in.api_call(LI_acc_token, event[0], event[1])
+    subject = linked_in.search_LI(LI_acc_token, event[0], event[1])
     
     yahoo_quote = yahoo.comORorg(event[1])
     
