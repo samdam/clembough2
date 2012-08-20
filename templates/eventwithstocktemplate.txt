@@ -9,7 +9,6 @@
 
 <div id="linked_in" style="background-color:#FFFFFF;height:500px;width:300px;float:left;">
 <b>About ${person} at ${company}</b><br />
-<img src="${imgsrc}" alt="{person} /><br />
 
 <table>
 <tr>
@@ -40,29 +39,29 @@
 
 <div id="person_info" style="background-color:#FFFFFF;height:500px;width:300px;float:left;">
 <b>Info about ${person}</b><br />
-<a href="${plink1}>${ptitle1}</a><br />
+<a href="${plink1}">${ptitle1}</a><br />
 <p>${pdesc1}</p><br />
-<a href="${plink2}>${ptitle2}</a><br />
+<a href="${plink2}">${ptitle2}</a><br />
 <p>${pdesc2}</p><br />
-<a href="${plink3}>${ptitle3}</a><br />
+<a href="${plink3}">${ptitle3}</a><br />
 <p>${pdesc3}</p><br />
-<a href="${plink4}>${ptitle4}</a><br />
+<a href="${plink4}">${ptitle4}</a><br />
 <p>${pdesc4}</p><br />
-<a href="${plink5}>${ptitle5}</a><br />
+<a href="${plink5}">${ptitle5}</a><br />
 <p>${pdesc5}</p>
 </div>
 
 <div id="company_news" style="background-color:#FFFFFF;height:500px;width:300px;float:left;">
 <b>Info and News about ${company}</b><br />
-<a href="${clink1}>${ctitle1}</a><br />
+<a href="${clink1}">${ctitle1}</a><br />
 <p>${cdesc1}</p><br />
-<a href="${clink2}>${ctitle2}</a><br />
+<a href="${clink2}">${ctitle2}</a><br />
 <p>${cdesc2}</p><br />
-<a href="${clink3}>${ctitle3}</a><br />
+<a href="${clink3}">${ctitle3}</a><br />
 <p>${cdesc3}</p><br />
-<a href="${clink4}>${ctitle4}</a><br />
+<a href="${clink4}">${ctitle4}</a><br />
 <p>${cdesc4}</p><br />
-<a href="${clink5}>${ctitle5}</a><br />
+<a href="${clink5}">${ctitle5}</a><br />
 <p>${cdesc5}</p><br />
 
 <table>
