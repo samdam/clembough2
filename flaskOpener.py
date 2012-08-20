@@ -22,6 +22,7 @@ def index():
 
 @app.route('/<path:name>/')
 def summon_person(name):
+    print events
     for event in events:
         if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
             eventDict = dict(event_title=event[0][0]+" at "+event[0][1],
