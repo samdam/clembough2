@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    if app.jinja_env.globals['events'] = None:
+    if app.jinja_env.globals['events'] == None:
         events = main.getEvents()
     else: 
         events = app.jinja_env.globals['events']
