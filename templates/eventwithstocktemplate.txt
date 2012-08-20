@@ -13,7 +13,7 @@
 <table>
 <tr>
 <td>Name: </td>
-<td>${name} </td>
+<td>${person} </td>
 </tr>
 <tr>
 <td>Job Title: </td>
