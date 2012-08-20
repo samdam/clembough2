@@ -1,11 +1,12 @@
 """
-Saw someone do this once
+this contains the functions necessary to get a LinkedIn user's profile info
 """
 
 import oauth2 as oauth
 import urlparse
 from bs4 import BeautifulSoup
 
+# Bunch: Represents a LinkedIn profile.
 class Bunch:
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
@@ -23,15 +24,17 @@ class Bunch:
                     string += (key + ':').ljust(20) + field + '\n'
         return string
 
+# getOAuthToken: Get user's permission to access LinkedIn. User must follow a link to get a PIN, which they give to the program.
+# returns OAuth access token and token secret.
 def getOAuthToken():
-    #initialize the oauth client
+    # initialize the oauth client
     my_key = "qpquu715bd1y"
     my_secret = "xGmeUfgStvhJcPrf"
 
     consumer = oauth.Consumer(my_key, my_secret)
     client = oauth.Client(consumer)
 
-    #get a request token
+    # get a request token
     request_token_url      = 'https://api.linkedin.com/uas/oauth/requestToken'
     resp, content = client.request(request_token_url, "POST")
     if resp['status'] != '200':
@@ -39,17 +42,14 @@ def getOAuthToken():
  
     request_token = dict(urlparse.parse_qsl(content))
 
-    #redirect to the provider
-    print "Go to the following link in your browser, log in with your LinkedIn account and select authorize. If you do not have an account, use this one:"
+    # direct user to link
+    print "Go to the following link in your browser, log in with your LinkedIn account and select authorize."
     print "%s?oauth_token=%s" % ('https://api.linkedin.com/uas/oauth/authorize', request_token['oauth_token'])
 
-    #?
-    # After the user has granted access to you, the consumer, the provider will
-    # redirect you to whatever URL you have told them to redirect to. You can 
-    # usually define this in the oauth_callback argument as well.
+    # obtain PIN from user
     oauth_verifier = raw_input('What is the PIN? ')
 
-    #get the access token
+    # get the access token
     access_token_url = 'https://api.linkedin.com/uas/oauth/accessToken'
     token = oauth.Token(request_token['oauth_token'], request_token['oauth_token_secret'])
     token.set_verifier(oauth_verifier)
@@ -60,60 +60,52 @@ def getOAuthToken():
 
     access_token_stuff = [access_token['oauth_token'], access_token['oauth_token_secret']]
  
-    print "Access Token:"
-    print "    - oauth_token        = %s" % access_token_stuff[0]
-    print "    - oauth_token_secret = %s" % access_token_stuff[1]
-    print
-    print "You may now access protected resources using the access tokens above."
-
     return access_token_stuff
 
-
-def api_call(access_token_stuff, name, company):
+# search_LI: Search subject's name on LinkedIn. Find a match with the correct company.
+# takes OAuth access token and token secret as tuple, plus subject's name and company.
+# returns Bunch object containing the subject's LinkedIn info, or a blank Bunch object if no matches are found.
+def search_LI(access_token_stuff, name, company):
     names = name.split()
   
     url = 'http://api.linkedin.com/v1/people-search:(people:(id,first-name,last-name,headline,industry,summary,specialties,location:(name),positions))?first-name=' + names[0] + '&last-name=' + names[1]
 
-    # Create your consumer with the proper key/secret.
     consumer = oauth.Consumer(key="qpquu715bd1y", 
         secret="xGmeUfgStvhJcPrf")
 
-    #request_token_url = "https://api.linkedin.com/uas/oauth/requestToken"
     token = oauth.Token(key=access_token_stuff[0],
                         secret=access_token_stuff[1])
 
-    # Create our client.
     client = oauth.Client(consumer, token)
 
-    # The OAuth Client request works just like httplib2 for the most part.
+    # call LinkedIn's REST api
     resp, content = client.request(url, "GET")
-    print content
     contentBS = BeautifulSoup(content)
-    
+
+    # parse results
     peopleBS = contentBS.find_all('person')
-    
     people = []
     for personBS in peopleBS:
         LIcompany = None
-        #if not personBS.find('positions') == None:
-        if len(personBS.find('positions')) > 0:
+        if not personBS.find('positions') == None:
             LIcompany = BS2string(personBS.find('positions').find('position').find('company'), 'name')
-        person = Bunch(first_name= BS2string(personBS, 'first-name'),
-                       last_name= BS2string(personBS, 'last-name'),
-                       headline= BS2string(personBS, 'headline'),
-                       industry= BS2string(personBS, 'industry'),
-                       summary= BS2string(personBS, 'summary'),
-                       specialties= BS2string(personBS, 'specialties'),
-                       location= BS2string(personBS.find('location'), 'name'),
-                       company= LIcompany,
-                       isEmpty= False)
-        if (not person.company == None) and (person.company.lower() == company.lower()):
-            people.append(person)
-    if len(people) > 0:
-        return people[0].__dict__
-    else:
-        return Bunch(isEmpty= True)
 
+        # if a match is found, return it
+        if (not LIcompany == None) and (LIcompany.lower() == company.lower()):
+            return Bunch(first_name= BS2string(personBS, 'first-name'),
+                           last_name= BS2string(personBS, 'last-name'),
+                           headline= BS2string(personBS, 'headline'),
+                           industry= BS2string(personBS, 'industry'),
+                           summary= BS2string(personBS, 'summary'),
+                           specialties= BS2string(personBS, 'specialties'),
+                           location= BS2string(personBS.find('location'), 'name'),
+                           company= LIcompany,
+                           isEmpty= False)
+    return Bunch(isEmpty= True)
+
+# BS2string: searches Beautiful Soup object for a tag and returns it as a string.
+# takes a BS object and the tag to search for.
+# returns desired content as a string.
 def BS2string(soup, tag):
     if not soup == None:
         if soup.find(tag):
@@ -121,17 +113,7 @@ def BS2string(soup, tag):
     return 'None'
 
 def main():
-    access_token = getOAuthToken()
-    while (True):
-        name = raw_input('Who?      ')
-        if (name == 'done'):
-            break
-        company = raw_input('Company?   ')
-        person = api_call(access_token, name, company)
-        if person == None:
-            print 'Nobody found'
-        else:
-            print person
+    pass
     
 
 if __name__== "__main__":

@@ -38,7 +38,7 @@
 </table>
 
 <div id="person_info" style="background-color:#FFFFFF;height:500px;width:300px;float:left;">
-<b>Info about ${person}</b><br />
+<b>Info and News about ${person}</b><br />
 <a href="${plink1}">${ptitle1}</a><br />
 <p>${pdesc1}</p><br />
 <a href="${plink2}">${ptitle2}</a><br />
@@ -106,7 +106,7 @@
 </tr>
 <tr>
 <td>Yield</td>
-<td>${yield}</td>
+<td>${y}</td>
 </tr>
 <tr>
 <td>Stock Exchange</td>
