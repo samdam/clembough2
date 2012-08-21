@@ -81,8 +81,6 @@ def summon_person(name): #makes the data sheet about an event
                              y=event[1][1][10].split(':')[1],
                              stock_x=event[1][1][11].split(':')[1])
             eventWithStockWriter(eventDict) #write html page
-        else: 
-            return "No Linked In Data"
             
     return render_template('event.html') #render the html page
     
