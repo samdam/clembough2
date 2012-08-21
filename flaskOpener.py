@@ -38,17 +38,20 @@ def summon_person(name): #makes the data sheet about an event
                              industry=str(event[1][0]['industry']).translate(trans_table),
                              summary=str(event[1][0]['summary']).translate(trans_table),
                              specialties=str(event[1][0]['specialties']).translate(trans_table),
-                             location=str(event[1][0]['location']).translate(trans_table),
-                             clink1=event[1][3][0][0], ctitle1=event[1][3][0][1], cdesc1=event[1][3][0][2],
-                             clink2=event[1][3][1][0], ctitle2=event[1][3][1][1], cdesc2=event[1][3][1][2],
-                             clink3=event[1][3][2][0], ctitle3=event[1][3][2][1], cdesc3=event[1][3][2][2],
-                             clink4=event[1][3][3][0], ctitle4=event[1][3][3][1], cdesc4=event[1][3][3][2],
-                             clink5=event[1][3][4][0], ctitle5=event[1][3][4][1], cdesc5=event[1][3][4][2],
-                             plink1=event[1][3][5][0], ptitle1=event[1][3][5][1], pdesc1=event[1][3][5][2],
-                             plink2=event[1][3][6][0], ptitle2=event[1][3][6][1], pdesc2=event[1][3][6][2],
-                             plink3=event[1][3][7][0], ptitle3=event[1][3][7][1], pdesc3=event[1][3][7][2],
-                             plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
-                             plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2])
+                             location=str(event[1][0]['location']).translate(trans_table))
+            length = len(event[1][3])
+            length2 = -1
+            if length > 5:
+                length2 = length - 5
+            for i in range(length):
+                eventDict['clink' + str(i+1)] = event[1][3][i][0]
+                eventDict['ctitle' + str(i+1)] = event[1][3][i][1]
+                eventDict['cdesc' + str(i+1)] = event[1][3][i][2]
+            if length2 > 0:
+                for i in range(length2):
+                    eventDict['plink' + str(i+1)] = event[1][3][i+5][0]
+                    eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
+                    eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
             eventNoStockWriter(eventDict) #writes the html
         elif 'person=' + event[0][0] == name: #if it does have stock data
             #writes the dict for the html page with stock data
@@ -59,16 +62,6 @@ def summon_person(name): #makes the data sheet about an event
                              summary=str(event[1][0]['summary']).translate(trans_table),
                              specialties=str(event[1][0]['specialties']).translate(trans_table),
                              location=str(event[1][0]['location']).translate(trans_table),
-                             clink1=event[1][3][0][0], ctitle1=event[1][3][0][1], cdesc1=event[1][3][0][2],
-                             clink2=event[1][3][1][0], ctitle2=event[1][3][1][1], cdesc2=event[1][3][1][2],
-                             clink3=event[1][3][2][0], ctitle3=event[1][3][2][1], cdesc3=event[1][3][2][2],
-                             clink4=event[1][3][3][0], ctitle4=event[1][3][3][1], cdesc4=event[1][3][3][2],
-                             clink5=event[1][3][4][0], ctitle5=event[1][3][4][1], cdesc5=event[1][3][4][2],
-                             plink1=event[1][3][5][0], ptitle1=event[1][3][5][1], pdesc1=event[1][3][5][2],
-                             plink2=event[1][3][6][0], ptitle2=event[1][3][6][1], pdesc2=event[1][3][6][2],
-                             plink3=event[1][3][7][0], ptitle3=event[1][3][7][1], pdesc3=event[1][3][7][2],
-                             plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
-                             plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2],
                              ticker=event[1][1][1].split(':')[1],
                              previous_close=event[1][1][2].split(':')[1],
                              change=event[1][1][3].split(':')[1],
@@ -80,6 +73,19 @@ def summon_person(name): #makes the data sheet about an event
                              dividend=event[1][1][9].split(':')[1],
                              y=event[1][1][10].split(':')[1],
                              stock_x=event[1][1][11].split(':')[1])
+            length = len(event[1][3])
+            length2 = -1
+            if length > 5:
+                length2 = length - 5
+            for i in range(length):
+                eventDict['clink' + str(i+1)] = event[1][3][i][0]
+                eventDict['ctitle' + str(i+1)] = event[1][3][i][1]
+                eventDict['cdesc' + str(i+1)] = event[1][3][i][2]
+            if length2 > 0:
+                for i in range(length2):
+                    eventDict['plink' + str(i+1)] = event[1][3][i+5][0]
+                    eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
+                    eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
             eventWithStockWriter(eventDict) #write html page
             
     return render_template('event.html') #render the html page
