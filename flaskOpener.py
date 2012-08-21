@@ -48,7 +48,7 @@ def summon_person(name): #makes the data sheet about an event
                              plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
                              plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2])
             eventNoStockWriter(eventDict) #writes the html
-        elif event[0][0] == name and event[1][0] != None: #if it does have stock data
+        elif event[0][0] == name: #if it does have stock data
             #writes the dict for the html page with stock data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
