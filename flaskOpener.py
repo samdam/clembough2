@@ -29,7 +29,7 @@ def summon_person(name): #makes the data sheet about an event
     for event in app.jinja_env.globals['events']:
         #first checks that its the correct event and if it has stock data
         print event[1][0]
-        if 'person=' + event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
+        if 'person=' + event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance." and event[1][0] != "No matches found on LinkedIn.":
             #if not, makes a dictionary from the event data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
@@ -52,7 +52,7 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
             eventNoStockWriter(eventDict) #writes the html
-        elif 'person=' + event[0][0] == name: #if it does have stock data
+        elif 'person=' + event[0][0] == name and event[1][0] != "No matches found on LinkedIn.": #if it does have stock data
             #writes the dict for the html page with stock data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
@@ -86,6 +86,23 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
             eventWithStockWriter(eventDict) #write html page
+        elif event[1][0] == "No matches found on LinkedIn.":
+            eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
+                             person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table))
+            length = len(event[1][3])
+            length2 = -1
+            if length > 5:
+                length2 = length - 5
+            for i in range(length):
+                eventDict['clink' + str(i+1)] = event[1][3][i][0]
+                eventDict['ctitle' + str(i+1)] = event[1][3][i][1]
+                eventDict['cdesc' + str(i+1)] = event[1][3][i][2]
+            if length2 > 0:
+                for i in range(length2):
+                    eventDict['plink' + str(i+1)] = event[1][3][i+5][0]
+                    eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
+                    eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
+            eventNoStockWriter(eventDict) #writes the html
             
     return render_template('event.html') #render the html page
     
