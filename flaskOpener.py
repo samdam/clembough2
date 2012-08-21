@@ -54,7 +54,7 @@ def summon_person(name): #makes the data sheet about an event
         elif 'person=' + event[0][0] == name and event[1][0] != "No matches found on LinkedIn.": #if it does have stock data
             #writes the dict for the html page with stock data
             print 'person=' + event[0][0] == name
-            print event[1][0] == "No matches found on LinkedIn."
+            print event[1][0] != "No matches found on LinkedIn."
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
                              job_title=str(event[1][0]['headline']).translate(trans_table), 
