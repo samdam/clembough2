@@ -28,7 +28,7 @@ def summon_person(name): #makes the data sheet about an event
     trans_table = ''.join( [chr(i) for i in range(128)] + [' '] * 128 ) #used to remove unrecognized unicode chars
     for event in app.jinja_env.globals['events']:
         #first checks that its the correct event and if it has stock data
-        if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance." and event[1][0] != None:
+        if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
             #if not, makes a dictionary from the event data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
