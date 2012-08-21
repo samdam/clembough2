@@ -56,7 +56,7 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['clink' + str(i+1)] = "None"
                     eventDict['ctitle' + str(i+1)] = "None"
                     eventDict['cdesc' + str(i+1)] = "None"
-                for i in ragne(5):
+                for i in range(5):
                     eventDict['plink' + str(i+1)] = "None"
                     eventDict['ptitle' + str(i+1)] = "None"
                     eventDict['pdesc' + str(i+1)] = "None"
@@ -106,7 +106,7 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['clink' + str(i+1)] = "None"
                     eventDict['ctitle' + str(i+1)] = "None"
                     eventDict['cdesc' + str(i+1)] = "None"
-                for i in ragne(5):
+                for i in range(5):
                     eventDict['plink' + str(i+1)] = "None"
                     eventDict['ptitle' + str(i+1)] = "None"
                     eventDict['pdesc' + str(i+1)] = "None"
@@ -137,7 +137,7 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['clink' + str(i+1)] = "None"
                     eventDict['ctitle' + str(i+1)] = "None"
                     eventDict['cdesc' + str(i+1)] = "None"
-                for i in ragne(5):
+                for i in range(5):
                     eventDict['plink' + str(i+1)] = "None"
                     eventDict['ptitle' + str(i+1)] = "None"
                     eventDict['pdesc' + str(i+1)] = "None"
