@@ -38,7 +38,7 @@ def summon_person(name): #makes the data sheet about an event
                              specialties=str(event[1][0]['specialties']).translate(trans_table),
                              location=str(event[1][0]['location']).translate(trans_table))
             length = len(event[1][3])
-            length2 = -1
+            length2 = 0
             if length > 5:
                 length2 = length - 5
             for i in range(length):
@@ -50,6 +50,21 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['plink' + str(i+1)] = event[1][3][i+5][0]
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
+                    
+            if length + length2 < 5:
+                for i in range(length+length2, 5):
+                    eventDict['clink' + str(i+1)] = "None"
+                    eventDict['ctitle' + str(i+1)] = "None"
+                    eventDict['cdesc' + str(i+1)] = "None"
+                for i in ragne(5):
+                    eventDict['plink' + str(i+1)] = "None"
+                    eventDict['ptitle' + str(i+1)] = "None"
+                    eventDict['pdesc' + str(i+1)] = "None"
+            elif length + length2 < 10:
+                for i in range(length+length2, 10):
+                    eventDict['plink' + str(i+1)] = "None"
+                    eventDict['ptitle' + str(i+1)] = "None"
+                    eventDict['pdesc' + str(i+1)] = "None"
             eventNoStockWriter(eventDict) #writes the html
         elif 'person=' + event[0][0] == name and event[1][0] == "No matches found on LinkedIn.": #if it does have stock data
             #writes the dict for the html page with stock data
@@ -86,6 +101,20 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['plink' + str(i+1)] = event[1][3][i+5][0]
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
+            if length + length2 < 5:
+                for i in range(length+length2, 5):
+                    eventDict['clink' + str(i+1)] = "None"
+                    eventDict['ctitle' + str(i+1)] = "None"
+                    eventDict['cdesc' + str(i+1)] = "None"
+                for i in ragne(5):
+                    eventDict['plink' + str(i+1)] = "None"
+                    eventDict['ptitle' + str(i+1)] = "None"
+                    eventDict['pdesc' + str(i+1)] = "None"
+            elif length + length2 < 10:
+                for i in range(length+length2, 10):
+                    eventDict['plink' + str(i+1)] = "None"
+                    eventDict['ptitle' + str(i+1)] = "None"
+                    eventDict['pdesc' + str(i+1)] = "None"
             eventWithStockWriter(eventDict) #write html page
         elif 'person=' + event[0][0] == name and event[1][0] != "No matches found on LinkedIn.":
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
@@ -103,6 +132,20 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['plink' + str(i+1)] = event[1][3][i+5][0]
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
+            if length + length2 < 5:
+                for i in range(length+length2, 5):
+                    eventDict['clink' + str(i+1)] = "None"
+                    eventDict['ctitle' + str(i+1)] = "None"
+                    eventDict['cdesc' + str(i+1)] = "None"
+                for i in ragne(5):
+                    eventDict['plink' + str(i+1)] = "None"
+                    eventDict['ptitle' + str(i+1)] = "None"
+                    eventDict['pdesc' + str(i+1)] = "None"
+            elif length + length2 < 10:
+                for i in range(length+length2, 10):
+                    eventDict['plink' + str(i+1)] = "None"
+                    eventDict['ptitle' + str(i+1)] = "None"
+                    eventDict['pdesc' + str(i+1)] = "None"
             eventNoStockWriter(eventDict) #writes the html
             
     return render_template('event.html') #render the html page
