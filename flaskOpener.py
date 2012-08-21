@@ -16,7 +16,8 @@ def index(): #first step, shows the first 5 meetings etc on calendar
     if length > 5:
         length = 5
     for i in range(length):
-        eventsDict['event' + str(i)] = events[i][0][1]
+        print i
+        eventsDict['event' + str(i)] = events[i][0][0]
         eventsDict['event' + str(i) + 'href'] = "/" + events[i][0][0]
         # ^ creates dict for replacing variables in the html menu
     menuWriter(eventsDict) #make menu
