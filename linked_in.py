@@ -99,8 +99,9 @@ def search_LI(access_token_stuff, name, company):
                        location= BS2string(personBS.find('location'), 'name'),
                        company= LIcompany,
                        isEmpty= False)
-        if (not person.company == None) and (person.company.lower() == company.lower()):
-            people.append(person)
+        if (not person.company == None):
+            if (person.company.lower() in company.lower()) or (company.lower() in person.company.lower()):
+                people.append(person)
     if len(people) > 0:
         return people[0].__dict__
     else:
