@@ -29,6 +29,7 @@ def summon_person(name): #makes the data sheet about an event
     for event in app.jinja_env.globals['events']:
         #first checks that its the correct event and if it has stock data
         print event[0][0]
+        print name
         if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
             #if not, makes a dictionary from the event data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
