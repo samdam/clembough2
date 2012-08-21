@@ -51,7 +51,7 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
             eventNoStockWriter(eventDict) #writes the html
-        elif 'person=' + event[0][0] == name and event[1][0] != "No matches found on LinkedIn.": #if it does have stock data
+        elif 'person=' + event[0][0] == name and event[1][0] == "No matches found on LinkedIn.": #if it does have stock data
             #writes the dict for the html page with stock data
             print 'person=' + event[0][0] == name
             print event[1][0] != "No matches found on LinkedIn."
