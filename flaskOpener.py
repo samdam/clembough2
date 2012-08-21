@@ -87,7 +87,7 @@ def summon_person(name): #makes the data sheet about an event
                     eventDict['ptitle' + str(i+1)] = event[1][3][i+5][1]
                     eventDict['pdesc' + str(i+1)] = event[1][3][i+5][2]
             eventWithStockWriter(eventDict) #write html page
-        elif event[1][0] == "No matches found on LinkedIn.":
+        elif event[1][0] != "No matches found on LinkedIn.":
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table))
             length = len(event[1][3])
