@@ -18,7 +18,7 @@ def index(): #first step, shows the first 5 meetings etc on calendar
     for i in range(length):
         print i
         eventsDict['event' + str(i+1)] = events[i][0][0]
-        eventsDict['event' + str(i+1) + 'href'] = "/" + events[i][0][0]
+        eventsDict['event' + str(i+1) + 'href'] = "/person=" + events[i][0][0]
         # ^ creates dict for replacing variables in the html menu
     menuWriter(eventsDict) #make menu
     return render_template('presentation.html') #render menu
@@ -30,7 +30,7 @@ def summon_person(name): #makes the data sheet about an event
         #first checks that its the correct event and if it has stock data
         print event[0][0]
         print name
-        if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
+        if 'person=' + event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
             #if not, makes a dictionary from the event data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
@@ -50,7 +50,7 @@ def summon_person(name): #makes the data sheet about an event
                              plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
                              plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2])
             eventNoStockWriter(eventDict) #writes the html
-        elif event[0][0] == name: #if it does have stock data
+        elif 'person=' + event[0][0] == name: #if it does have stock data
             #writes the dict for the html page with stock data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
