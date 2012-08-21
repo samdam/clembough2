@@ -11,12 +11,11 @@ app = Flask(__name__)
 def index(): #first step, shows the first 5 meetings etc on calendar
     events = main.getEvents() #gets the events
     app.jinja_env.globals['events'] = events #sets is as a global variable for second step
-    eventsDict = dict(event1=events[0][0][0], event1href="/"+events[0][0][0],
-                      event2=events[1][0][0], event2href="/"+events[1][0][0],
-                      event3=events[2][0][0], event3href="/"+events[2][0][0],
-                      event4=events[3][0][0], event4href="/"+events[3][0][0],
-                      event5=events[4][0][0], event5href="/"+events[4][0][0])
-                      # ^ creates dict for replacing variables in the html menu
+    eventsDict = dict()
+    for i in len(events):
+        dict['event1'] = events[0][0][1]
+        dict['event1href'] = "/" + events[0][0][0]
+        # ^ creates dict for replacing variables in the html menu
     menuWriter(eventsDict) #make menu
     return render_template('presentation.html') #render menu
 
@@ -25,7 +24,7 @@ def summon_person(name): #makes the data sheet about an event
     trans_table = ''.join( [chr(i) for i in range(128)] + [' '] * 128 ) #used to remove unrecognized unicode chars
     for event in app.jinja_env.globals['events']:
         #first checks that its the correct event and if it has stock data
-        if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance.":
+        if event[0][0] == name and event[1][1] == "No info available from Yahoo! Finance." and event[1][0] != None:
             #if not, makes a dictionary from the event data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
@@ -45,7 +44,7 @@ def summon_person(name): #makes the data sheet about an event
                              plink4=event[1][3][8][0], ptitle4=event[1][3][8][1], pdesc4=event[1][3][8][2],
                              plink5=event[1][3][9][0], ptitle5=event[1][3][9][1], pdesc5=event[1][3][9][2])
             eventNoStockWriter(eventDict) #writes the html
-        elif event[0][0] == name: #if it does have stock data
+        elif event[0][0] == name and event[1][0] != None: #if it does have stock data
             #writes the dict for the html page with stock data
             eventDict = dict(event_title=(event[0][0]+" at "+event[0][1]).translate(trans_table),
                              person=event[0][0].translate(trans_table), company=event[0][1].translate(trans_table),
@@ -76,6 +75,8 @@ def summon_person(name): #makes the data sheet about an event
                              y=event[1][1][10].split(':')[1],
                              stock_x=event[1][1][11].split(':')[1])
             eventWithStockWriter(eventDict) #write html page
+        else: 
+            return "No Linked In Data"
             
     return render_template('event.html') #render the html page
     
