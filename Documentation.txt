@@ -1,0 +1,42 @@
+NECESSARY FILES/FOLDERS
+  From Clembough2
+    main.py
+    retrieve.py
+    alcParse.py
+    linked_in.py
+    yahoo.py
+    news_info.py
+    linked_in_api_key.txt
+    templates [folder]
+
+  From Beautiful Soup
+    bs4 [folder]
+
+  From Python
+    httplib2 [folder]
+
+  From OAuth
+    oauth2 [folder]
+
+  From Alchemy
+    AlchemyAPI.py
+    api_key.txt
+
+  From Flask
+    flaskOpener.py
+
+  From 30 Boxes
+    30boxes_api_key.txt
+
+  From LinkdedIn
+    linked_in_api.txt
+
+DUMMY ACCOUNTS
+  30Boxes
+    email: clembough2@safe-mail.net
+    password: clembough2
+  LinkedIn
+    eamil: clembough2@safe-mail.net
+    password: clembough2
+
+USAGE SCRIPT
