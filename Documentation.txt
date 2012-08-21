@@ -8,6 +8,7 @@ NECESSARY FILES/FOLDERS
     news_info.py
     linked_in_api_key.txt
     templates [folder]
+    puttyprivatekey.ppk
 
   From Beautiful Soup
     bs4 [folder]
@@ -44,7 +45,8 @@ USAGE SCRIPT
 to use:
   1. set up an ssh connection to the server 23.23.237.182:22 
   2. login as: adam
-    should authenticate automatically with "rsa-key-20120604", included in files. 
+    should authenticate automatically with "puttyprivatekey.ppk", included in files. 
+    if it doesn't do it automatically, locate in on your system. 
   3. enter the following text:
     $ cd clembough2
     $ python flaskOpener.py
